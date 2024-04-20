@@ -9,11 +9,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv"
-        android:name="com.example.zbwx.fragments.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:layout="@layout/fragment_home" />
+        android:layout_weight="1" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
