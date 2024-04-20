@@ -11,4 +11,10 @@
     <color name="grey_menu">#929292</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="circle1">#817BFF</color>
+    <color name="circle2">#40FFC3</color>
+    <color name="circle3">#FFC44C</color>
+    <color name="circle4">#6CABFF</color>
+
+
 </resources>
