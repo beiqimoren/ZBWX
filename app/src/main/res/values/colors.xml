@@ -9,8 +9,8 @@
     <color name="huise">#7C7A7A</color>
     <color name="blue_menu">#0970FF</color>
     <color name="grey_menu">#929292</color>
-    <color name="white">#FFFFFFFF</color>
-
+    <color name="blue_title">#4095E5</color>
+    <color name="white">#FFFFFFFF</color>blue_title
     <color name="circle1">#817BFF</color>
     <color name="circle2">#40FFC3</color>
     <color name="circle3">#FFC44C</color>

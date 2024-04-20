@@ -1,0 +1,20 @@
+<vector android:height="40dp" android:viewportHeight="217"
+    android:viewportWidth="176" android:width="35dp"
+    xmlns:aapt="http://schemas.android.com/aapt" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:pathData="M168,214H8C6.67,214 5.4,213.47 4.46,212.54C3.53,211.6 3,210.33 3,209V25C3,23.67 3.53,22.4 4.46,21.46C5.4,20.53 6.67,20 8,20H168C169.33,20 170.6,20.53 171.54,21.46C172.47,22.4 173,23.67 173,25V209C173,210.33 172.47,211.6 171.54,212.54C170.6,213.47 169.33,214 168,214Z"
+        android:strokeColor="#FFE8BB" android:strokeWidth="6">
+        <aapt:attr name="android:fillColor">
+            <gradient android:endX="88" android:endY="217"
+                android:startX="88" android:startY="17" android:type="linear">
+                <item android:color="#FFFFFFFF" android:offset="0"/>
+                <item android:color="#49FFFFFF" android:offset="1"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#ffffff"
+        android:pathData="M117.36,3.7H58.64C53.94,3.7 50.14,7.5 50.14,12.2V26.91C50.14,31.61 53.94,35.41 58.64,35.41H117.36C122.06,35.41 125.86,31.61 125.86,26.91V12.2C125.86,7.5 122.06,3.7 117.36,3.7Z"
+        android:strokeColor="#FFD480" android:strokeWidth="7"/>
+    <path android:fillColor="#FFA800" android:pathData="M100,91H148V103H100V91ZM100,63H148V75H100V63ZM56,59C62.37,59 68.47,61.53 72.97,66.03C77.47,70.53 80,76.63 80,83C80,89.37 77.47,95.47 72.97,99.97C68.47,104.47 62.37,107 56,107C49.63,107 43.53,104.47 39.03,99.97C34.53,95.47 32,89.37 32,83C32,76.63 34.53,70.53 39.03,66.03C43.53,61.53 49.63,59 56,59ZM56,95C59.18,95 62.23,93.74 64.49,91.49C66.74,89.23 68,86.18 68,83C68,79.82 66.74,76.77 64.49,74.51C62.23,72.26 59.18,71 56,71C52.82,71 49.77,72.26 47.51,74.51C45.26,76.77 44,79.82 44,83C44,86.18 45.26,89.23 47.51,91.49C49.77,93.74 52.82,95 56,95Z"/>
+    <path android:fillColor="#ffffff" android:pathData="M100,162H148V174H100V162ZM100,134H148V146H100V134ZM43.27,166.38L29.13,152.24L37.62,143.76L51.76,157.9L78.38,131.27L86.87,139.76L51.76,174.87L43.27,166.38Z"/>
+</vector>
