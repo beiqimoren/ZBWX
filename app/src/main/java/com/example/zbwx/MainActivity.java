@@ -25,9 +25,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences sp;
-    private MyApplication myApplication;
-    private BottomNavigationView bnv;
+    SharedPreferences sp;
+    MyApplication myApplication;
+    BottomNavigationView bnv;
 
     //声明Fragments的工具和四个fragment
     FragmentManager fragmentManager;

@@ -1,6 +1,7 @@
 package com.example.zbwx.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,11 +9,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.zbwx.IntroduceActivity;
+import com.example.zbwx.LoginActivity;
 import com.example.zbwx.MainActivity;
 import com.example.zbwx.R;
 import com.example.zbwx.model.ZClistViewAdapter;
@@ -33,6 +39,7 @@ public class HomeFragment extends Fragment {
     //定义控件
      ListView lv_zc;
      ImageView msg,yuan1,yuan2,yuan3,yuan4;
+     LinearLayout fang1,fang2;
      TextView zc_more;
      List<ZClistviewitem> listdata_zc;
 
@@ -68,6 +75,8 @@ public class HomeFragment extends Fragment {
         this.yuan4 = view.findViewById(R.id.yuan4);
         this.zc_more=view.findViewById(R.id.zc_more);
         this.lv_zc = view.findViewById(R.id.lv_zc);
+        this.fang1 = view.findViewById(R.id.fang1);
+        this.fang2 = view.findViewById(R.id.fang2);
         //填充listview 数据
         ZClistviewitem zClistviewitem1=new ZClistviewitem("装备维修管理规定","2023年3月1日版",R.drawable.zcitem1);
         ZClistviewitem zClistviewitem2=new ZClistviewitem("装备管理条例","2023年3月1日版",R.drawable.zcitem1);
@@ -82,8 +91,72 @@ public class HomeFragment extends Fragment {
         //加载数据到listview适配器
         ZClistViewAdapter zClistViewAdapter = new ZClistViewAdapter(this.getContext(),listdata_zc);
         this.lv_zc.setAdapter(zClistViewAdapter);
+        //第1个圆形按钮的监听事件
+        yuan1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), IntroduceActivity.class);
+                startActivity(intent);
+                //Toast.makeText(view.getContext(), "体系介绍",Toast.LENGTH_SHORT).show();
+            }
+        });
+        //第2个圆形按钮的监听事件
+        yuan2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "机构注册",Toast.LENGTH_SHORT).show();
 
+            }
+        });
+        //第3个圆形按钮的监听事件
+        yuan3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "业务咨询",Toast.LENGTH_SHORT).show();
 
+            }
+        });
+        //第4个圆形按钮的监听事件
+        yuan4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "能力培训",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //第1个方形按钮的监听事件
+        fang1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "装备报修",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //第2个方形按钮的监听事件
+        fang2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "技术支援",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //装备法规-更多的监听事件
+        zc_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(), "更多法规",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //liseview的点击事件
+        lv_zc.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView tv = view.findViewById(R.id.item_title);
+                String title = tv.getText().toString();
+                Toast.makeText(adapterView.getContext(), title,Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
         return view;

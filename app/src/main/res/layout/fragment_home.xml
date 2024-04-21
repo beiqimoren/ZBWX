@@ -294,7 +294,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="政策法规"
+                        android:text="装备法规"
                         android:textColor="@color/black"
                         android:textSize="18sp"/>
                     <View
@@ -305,16 +305,17 @@
                         android:id="@+id/zc_more"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="24dp"
                         android:text="更多"
                         android:textStyle="italic"
                         android:textColor="@color/black"
                         android:gravity="bottom"
-                        android:textSize="14sp"/>
+                        android:textSize="16sp"/>
                 </LinearLayout>
                 <ListView
                     android:id="@+id/lv_zc"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="300dp"
                     android:divider="#d9d9d9"
                     android:dividerHeight="1dp"/>
 
