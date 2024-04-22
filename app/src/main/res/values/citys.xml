@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="citys">
+        <item>重庆市</item>
+        <item>成都市</item>
+        <item>兰州</item>
+        <item>张掖</item>
+
+
+    </string-array>
+    <string-array name="jike">
+        <item>计科B20-1</item>
+        <item>计科B20-</item>
+    </string-array>
+    <string-array name="ruangong">
+        <item>软工B20-1</item>
+        <item>软工B20-</item>
+    </string-array>
+</resources>
