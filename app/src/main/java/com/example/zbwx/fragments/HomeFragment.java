@@ -22,6 +22,7 @@ import com.example.zbwx.LoginActivity;
 import com.example.zbwx.MainActivity;
 import com.example.zbwx.R;
 import com.example.zbwx.RepairActivity;
+import com.example.zbwx.SupportActivity;
 import com.example.zbwx.model.ZClistViewAdapter;
 import com.example.zbwx.model.ZClistviewitem;
 
@@ -131,17 +132,14 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), RepairActivity.class);
                 startActivity(intent);
-
-                Toast.makeText(view.getContext(), "装备报修",Toast.LENGTH_SHORT).show();
-
             }
         });
         //第2个方形按钮的监听事件
         fang2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "技术支援",Toast.LENGTH_SHORT).show();
-
+                Intent intent = new Intent(getActivity(), SupportActivity.class);
+                startActivity(intent);
             }
         });
         //装备法规-更多的监听事件
