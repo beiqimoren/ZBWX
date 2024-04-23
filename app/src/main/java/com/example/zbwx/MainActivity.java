@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
         bnv.setSelectedItemId(R.id.menu_item_home);
         //判断登录状态
         sp = this.getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
-        if (sp.getBoolean("AUTO_ISCHECK", false)) {
-            myApplication = (MyApplication) getApplication();
-            myApplication.setUsername(sp.getString("USER_NAME", ""));
-        } else {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        }
+//        if (sp.getBoolean("AUTO_ISCHECK", false)) {
+//            myApplication = (MyApplication) getApplication();
+//            myApplication.setUsername(sp.getString("USER_NAME", ""));
+//        } else {
+//            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//            startActivity(intent);
+//        }
 
     }
 

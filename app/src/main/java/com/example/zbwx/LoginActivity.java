@@ -22,7 +22,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -56,10 +61,28 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            if(msg.what==1&&msg.obj.equals("成功")){
-                login_succesd();  //如果handler通知为1，则登录成功
-            }else
-                login_failed();  //如果handler通知不为1，则登录失败
+            try {
+                JSONObject msgobj = new JSONObject(msg.obj.toString());
+                String state = msgobj.getString("state");
+                int userID = msgobj.getInt("userID");
+                if(msg.what==1&& state.equals("成功")){
+                    SharedPreferences.Editor editor = sp.edit();//记住用户名
+                    editor.putInt("USER_ID", userID);
+                    editor.putString("USER_NAME", username);
+                    editor.putString("PASSWORD", password);
+                    editor.apply();
+                    MyApplication myApplication= (MyApplication) getApplication();
+                    myApplication.setUsername(sp.getString("USER_NAME",""));
+                    myApplication.setUserID(sp.getInt("USER_ID",0));
+
+                    //login_succesd();  //如果handler通知为1，则登录成功
+                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
+                }else
+                    login_failed();  //如果handler通知不为1，则登录失败
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -76,20 +99,19 @@ public class LoginActivity extends AppCompatActivity {
         _aulogin=findViewById(R.id.au_login);
         //获取SharedPreferences实例
         sp=this.getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
-        //判断记住密码和自动登录
-        if(sp.getBoolean("ISCHECK", false)) {
-            _rmpass.setChecked(true);
-            _emailText.setText(sp.getString("USER_NAME", ""));
-            _passwordText.setText(sp.getString("PASSWORD", ""));
-            if(sp.getBoolean("AUTO_ISCHECK", false)) {
-                //设置默认是自动登录状态
-                _aulogin.setChecked(true);
-                send_login_requst();     //发送登录请求
-                //Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                //startActivity(intent);
-                //this.finish();
-            }
-        }
+//        if(sp.getBoolean("ISCHECK", false)) {
+//            _rmpass.setChecked(true);
+//            _emailText.setText(sp.getString("USER_NAME", ""));
+//            _passwordText.setText(sp.getString("PASSWORD", ""));
+//            if(sp.getBoolean("AUTO_ISCHECK", false)) {
+//                //设置默认是自动登录状态
+//                _aulogin.setChecked(true);
+//                send_login_requst();     //发送登录请求
+//                //Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+//                //startActivity(intent);
+//                //this.finish();
+//            }
+//        }
         //注册动作
         _signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +127,10 @@ public class LoginActivity extends AppCompatActivity {
                 send_login_requst();
             }
         });
+        //判断记住密码和自动登录
+        _emailText.setText(sp.getString("USER_NAME", ""));
+        _passwordText.setText(sp.getString("PASSWORD", ""));
+        send_login_requst();     //发送登录请求
 
     }
     //发送验证请求
@@ -124,7 +150,6 @@ public class LoginActivity extends AppCompatActivity {
         urlBuilder.addQueryParameter("username", username);
         urlBuilder.addQueryParameter("password", password);
         String url = urlBuilder.build().toString();  // 构建完整的URL
-        //String url ="http://192.168.1.5:8000/login/?username=15723070964&password=78156";
         Request request = new Request.Builder().url(url).get().build(); //构建请求
         okHttpClient.newCall(request).enqueue(new Callback() {   //设置响应
             @Override    //响应失败进这里
@@ -134,11 +159,10 @@ public class LoginActivity extends AppCompatActivity {
             }
             @Override     //响应成功进这里
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                String body = Objects.requireNonNull(response.body()).string();
-                Message msg =new Message();
-                msg.what=1;
-                msg.obj=body;
-                login_handler.sendMessage(msg);  //Handler 发送消息，通知主进程响应成功
+                    Message msg =new Message();
+                    msg.what=1;
+                    msg.obj=response.body().string();
+                    login_handler.sendMessage(msg);//Handler 发送消息，通知主进程响应成功
             }
         });
     }
@@ -160,14 +184,12 @@ public class LoginActivity extends AppCompatActivity {
             editor.apply();
             sp.edit().putBoolean("ISCHECK", true).apply();
         }else sp.edit().putBoolean("ISCHECK", false).apply();
-        if (_aulogin.isChecked())
+        if (this._aulogin.isChecked())
             sp.edit().putBoolean("AUTO_ISCHECK", true).apply();
         else sp.edit().putBoolean("AUTO_ISCHECK", false).apply();
 //        progressDialog.dismiss();
-          _loginButton.setEnabled(true);
-          MyApplication myApplication= (MyApplication) getApplication();
-          myApplication.setUsername(sp.getString("USER_NAME",""));
-          finish();
+          this._loginButton.setEnabled(true);
+          //finish();
         //延迟2秒后finish当前activity
 //        new android.os.Handler().postDelayed(
 //                new Runnable() {

@@ -25,7 +25,7 @@ public class RepairFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ImageView add_repair,add_support;
+    ImageView add_repair,add_support,repair_more;
 
     public RepairFragment() {
         // Required empty public constructor
@@ -56,6 +56,7 @@ public class RepairFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_repair, container, false);
         add_repair=view.findViewById(R.id.add_repair);
         add_support=view.findViewById(R.id.add_support);
+        repair_more=view.findViewById(R.id.more_repair);
         add_repair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +69,12 @@ public class RepairFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SupportActivity.class);
                 startActivity(intent);
+            }
+        });
+        repair_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 
