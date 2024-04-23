@@ -1,5 +1,6 @@
 package com.example.zbwx.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.zbwx.R;
+import com.example.zbwx.RepairActivity;
+import com.example.zbwx.SupportActivity;
 
 
 public class RepairFragment extends Fragment {
@@ -20,6 +24,8 @@ public class RepairFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    ImageView add_repair,add_support;
 
     public RepairFragment() {
         // Required empty public constructor
@@ -47,7 +53,25 @@ public class RepairFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_repair, container, false);
+        View view=inflater.inflate(R.layout.fragment_repair, container, false);
+        add_repair=view.findViewById(R.id.add_repair);
+        add_support=view.findViewById(R.id.add_support);
+        add_repair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RepairActivity.class);
+                startActivity(intent);
+            }
+        });
+        add_support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SupportActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        return view;
     }
 }

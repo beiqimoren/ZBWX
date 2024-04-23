@@ -1,15 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.RepairFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="报修"
-        android:textSize="140dp" />
+        android:layout_height="55dp"
+        android:background="@color/blue_menu"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="预约报修"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/xuan1"
+        android:scaleType="center"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+<!--            滑动内容区-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:background="@drawable/edittext_father_style"
+                android:layout_margin="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="预报报修"
+                    android:paddingStart="15dp"
+                    android:gravity="center"
+                    android:textSize="18sp"/>
+                <ImageView
+                    android:id="@+id/add_repair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_add_24"
+                    android:scaleType="center"
+                    android:paddingHorizontal="15dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/more_repair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_more_24"
+                    android:scaleType="center"
+
+                    android:paddingHorizontal="10dp"/>
+
+
+            </LinearLayout>
+            <ListView
+                android:id="@+id/list_repair"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:background="@drawable/edittext_father_style"
+                android:layout_margin="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="技术支援"
+                    android:paddingStart="15dp"
+                    android:gravity="center"
+                    android:textSize="18sp"/>
+                <ImageView
+                    android:id="@+id/add_support"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_add_24"
+                    android:scaleType="center"
+                    android:paddingHorizontal="15dp"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/more_support"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_more_24"
+                    android:scaleType="center"
+
+                    android:paddingHorizontal="10dp"/>
+
+
+            </LinearLayout>
+            <ListView
+                android:id="@+id/list_support"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
