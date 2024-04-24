@@ -46,26 +46,15 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-
 public class RepairFragment extends Fragment {
-
-
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-
-
     private String mParam1;
     private String mParam2;
-
     ImageView add_repair,add_support,repair_more,support_more;
     ListView lv_repair,lv_support;
     private final OkHttpClient okHttpClient = new OkHttpClient();
-
     List<RepairTable> repairTableList;
-
-
     //设置handler,监听服务器返回消息，并执行操作
     Handler baoxiu_handler = new Handler(Looper.myLooper()){
         @Override
@@ -92,14 +81,9 @@ public class RepairFragment extends Fragment {
             }
         }
     };
-
-
-
     public RepairFragment() {
         // Required empty public constructor
     }
-
-
     public static RepairFragment newInstance(String param1, String param2) {
         RepairFragment fragment = new RepairFragment();
         Bundle args = new Bundle();
@@ -108,7 +92,6 @@ public class RepairFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,32 +101,11 @@ public class RepairFragment extends Fragment {
         }
 
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_repair, container, false);
-        add_repair=view.findViewById(R.id.add_repair);
-        add_support=view.findViewById(R.id.add_support);
-        repair_more=view.findViewById(R.id.more_repair);
-        support_more=view.findViewById(R.id.more_support);
-        lv_repair = view.findViewById(R.id.list_repair);
-        lv_support = view.findViewById(R.id.list_support);
-        repairTableList= new ArrayList<>();
-        add_repair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), RepairActivity.class);
-                startActivity(intent);
-            }
-        });
-        add_support.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SupportActivity.class);
-                startActivity(intent);
-            }
-        });
+        init_view(view);//初始化各种控件
         repair_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,6 +151,29 @@ public class RepairFragment extends Fragment {
         });
         return view;
     }
+    private void init_view(View view){
+        add_repair=view.findViewById(R.id.add_repair);
+        add_support=view.findViewById(R.id.add_support);
+        repair_more=view.findViewById(R.id.more_repair);
+        support_more=view.findViewById(R.id.more_support);
+        lv_repair = view.findViewById(R.id.list_repair);
+        lv_support = view.findViewById(R.id.list_support);
+        repairTableList= new ArrayList<>();
+        add_repair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), RepairActivity.class);
+                startActivity(intent);
+            }
+        });
+        add_support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SupportActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
     private void show_repairTableList() {
         List<ZClistviewitem> itemlist=new ArrayList<>();
         for (int i = 0; i < repairTableList.size(); i++){
@@ -199,9 +184,7 @@ public class RepairFragment extends Fragment {
         ZClistViewAdapter adapter = new ZClistViewAdapter(getActivity(),itemlist);
         this.lv_repair.setAdapter(adapter);
         Utility.setListViewHeightBasedOnChildren(lv_repair);
-
     }
-
     private void JSONArray_to_RepairTables(JSONArray jsonArray){
         repairTableList.clear();
         try {
