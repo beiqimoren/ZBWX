@@ -58,7 +58,8 @@ public class LoginActivity extends AppCompatActivity {
                     try{
                         JSONObject json = new JSONObject(msg.obj.toString());
                         switch (json.getString("state")){
-                            case "成功":login_succesed(json.getInt("userID"));
+                            case "成功":
+                                login_succesed(json.getInt("userID"));
                                 break;
                             case "密码错误": login_error("密码错误");
                                 break;

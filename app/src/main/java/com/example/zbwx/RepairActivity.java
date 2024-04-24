@@ -6,6 +6,7 @@ import static okhttp3.MediaType.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.zbwx.fragments.RepairFragment;
 import com.example.zbwx.model.Citys;
 import com.example.zbwx.model.RepairTable;
 
@@ -45,6 +47,7 @@ public class RepairActivity extends AppCompatActivity {
 
     ImageView imageView;
     Spinner spinner1, spinner2;
+    MyApplication myApplication;
 
     private String province, city;
     int position1 = 0;
@@ -60,7 +63,7 @@ public class RepairActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if(msg.what==1&&msg.obj.equals("成功")){
                 Toast.makeText(RepairActivity.this,"提交成功！",Toast.LENGTH_LONG).show();
-                RepairActivity.this.finish();
+                finish();
             }else {
                 Toast.makeText(RepairActivity.this, "提交失败！", Toast.LENGTH_SHORT).show();
                 //如果handler通知不为1，则登录失败
@@ -72,8 +75,17 @@ public class RepairActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repair);
-        //加载预先界面
+        //初始化控件
         imageView = findViewById(R.id.back_image);
+        submit = findViewById(R.id.submit);
+        equipment = findViewById(R.id.equipment);
+        type = findViewById(R.id.type);
+        address = findViewById(R.id.address);
+        fault = findViewById(R.id.falut);
+        contact = findViewById(R.id.contact);
+        phone = findViewById(R.id.phone);
+        unit = findViewById(R.id.unit);
+        notes = findViewById(R.id.notes);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +94,7 @@ public class RepairActivity extends AppCompatActivity {
         });
         spinner1 = findViewById(R.id.sp1);
         spinner2 = findViewById(R.id.sp2);
+        myApplication = (MyApplication)getApplication();
         // 省份Spinner适配器
         ArrayAdapter<String> provinceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new Citys().getProvince());
         spinner1.setAdapter(provinceAdapter);
@@ -95,7 +108,6 @@ public class RepairActivity extends AppCompatActivity {
                 ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(RepairActivity.this, android.R.layout.simple_spinner_dropdown_item, cities);
                 spinner2.setAdapter(cityAdapter);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -112,21 +124,11 @@ public class RepairActivity extends AppCompatActivity {
 
             }
         });
-        //获取数据
-        submit = findViewById(R.id.submit);
-        equipment = findViewById(R.id.equipment);
-        type = findViewById(R.id.type);
-        address = findViewById(R.id.address);
-        fault = findViewById(R.id.falut);
-        contact = findViewById(R.id.contact);
-        phone = findViewById(R.id.phone);
-        unit = findViewById(R.id.unit);
-        notes = findViewById(R.id.notes);
+        //提交数据
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //收集数据打包成JSON
-                MyApplication myApplication = (MyApplication)getApplication();
                 JSONObject json = new JSONObject();
                 try {
                     json.put("userID", myApplication.getUserID());
@@ -144,24 +146,6 @@ public class RepairActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                try {
-//                    json.put("userID", 12);
-//                    json.put("equipment", "华为传输");
-//                    json.put("type", "8800");
-//                    json.put("province", "重庆市");
-//                    json.put("city", "渝中区");
-//                    json.put("address", "长江一路");
-//                    json.put("fault", "10G光板故障灯常亮，自环未消失");
-//                    json.put("contact", "王忠攀");
-//                    json.put("phone", "15723070964");
-//                    json.put("unit", "重庆站");
-//                    json.put("notes", "测试1");
-//                    json.put("state", "待审核");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-
-                //设置http客户端post 发送JSON数据
                 OkHttpClient okHttpClient = new OkHttpClient();
                 RequestBody requestBody = RequestBody.create(String.valueOf(json),MediaType.parse("application/json; charset=utf-8"));
                 Request request=new Request.Builder()
@@ -185,19 +169,7 @@ public class RepairActivity extends AppCompatActivity {
                         repair_handler.sendMessage(msg);
                     }
                 });
-//                RepairTable repairTable=new RepairTable();
-//                repairTable.user_ID=myApplication.getUserID();
-//                repairTable.equipment=equipment.getText().toString();
-//                repairTable.type=type.getText().toString();
-//                repairTable.province=province;
-//                repairTable.city=city;
-//                repairTable.address=address.getText().toString();
-//                repairTable.fault=fault.getText().toString();
-//                repairTable.contacts=contact.getText().toString();
-//                repairTable.phone=phone.getText().toString();
-//                repairTable.unit=unit.getText().toString();
-//                repairTable.notes=notes.getText().toString();
-//                repairTable.state="待审核";
+
 
             }
         });

@@ -26,7 +26,9 @@ import com.example.zbwx.R;
 import com.example.zbwx.RepairActivity;
 import com.example.zbwx.SignupActivity;
 import com.example.zbwx.SupportActivity;
+import com.example.zbwx.model.MyHttpClient;
 import com.example.zbwx.model.RepairTable;
+import com.example.zbwx.model.SupportTable;
 import com.example.zbwx.model.Utility;
 import com.example.zbwx.model.ZClistViewAdapter;
 import com.example.zbwx.model.ZClistviewitem;
@@ -53,34 +55,49 @@ public class RepairFragment extends Fragment {
     private String mParam2;
     ImageView add_repair,add_support,repair_more,support_more;
     ListView lv_repair,lv_support;
-    private final OkHttpClient okHttpClient = new OkHttpClient();
+    MyApplication app_baoxiu;
     List<RepairTable> repairTableList;
+    List<SupportTable> supportTableList;
     //设置handler,监听服务器返回消息，并执行操作
     Handler baoxiu_handler = new Handler(Looper.myLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 0:
-                    Toast.makeText(getContext(),"网络连接失败",Toast.LENGTH_LONG).show();
-                    break;
+                case 0: Toast.makeText(getContext(),"网络连接失败",Toast.LENGTH_LONG).show();break;
                 case 1:
                     try {
-                        JSONArray jsonArray= new JSONArray(msg.obj.toString());
-                        JSONArray_to_RepairTables(jsonArray);
-                        show_repairTableList();
+                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                        if(jsonObject.getString("repairTable")=="没有数据")
+                            Toast.makeText(getContext(),"该用户目前没有单据！",Toast.LENGTH_LONG).show();
+                        else {
+                            JSONArray jsonArray= new JSONArray(jsonObject.getString("repairTable"));
+                            JSONArray_to_RepairTables(jsonArray);
+                            show_repairTableList();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
                 case 2:
-                    Toast.makeText(getContext(),"该用户目前没有单据！",Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject jsonObject = new JSONObject(msg.obj.toString());
+                        if(jsonObject.getString("supportTable")=="没有数据")
+                            Toast.makeText(getContext(),"该用户目前没有单据！",Toast.LENGTH_LONG).show();
+                        else {
+                            JSONArray jsonArray= new JSONArray(jsonObject.getString("supportTable"));
+                            JSONArray_to_SupportTables(jsonArray);
+                            show_supportTableList();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:break;
-
             }
         }
     };
+
     public RepairFragment() {
         // Required empty public constructor
     }
@@ -109,48 +126,18 @@ public class RepairFragment extends Fragment {
         repair_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(my_url + "select_repair_byuserID/")).newBuilder();
-                MyApplication app_baoxiu=(MyApplication) requireActivity().getApplication();
-                urlBuilder.addQueryParameter("userID", app_baoxiu.getUserIDtoString());
-                String url = urlBuilder.build().toString();  // 构建完整的URL
-                Request request = new Request.Builder().url(url).get().build(); //构建请求
-                okHttpClient.newCall(request).enqueue(new Callback() {   //设置响应
-                    @Override    //响应失败进这里
-                    public void onFailure(@NonNull Call call, IOException e) {
-                        Log.e("---body", "onResponse");
-                        baoxiu_handler.sendEmptyMessage(0);
-                    }
-
-                    @Override     //响应成功进这里
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        String response_string = response.body().string();
-                        if(!response_string.equals("没有数据")){
-                            try {
-                                JSONObject jsonObject = new JSONObject(response_string);
-                                String jsonArray_string = jsonObject.getString("repairTable");
-                                JSONArray jsonArray = new JSONArray(jsonArray_string);
-                                Message msg=new Message();
-                                msg.what=1;
-                                msg.obj=jsonArray.toString();
-                                baoxiu_handler.sendMessage(msg);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }else
-                            baoxiu_handler.sendEmptyMessage(2);//没有数据
-
-                    }
-                });
+                MyHttpClient client=new MyHttpClient(baoxiu_handler,"select_repair_byuserID/",app_baoxiu.getUserIDtoString());
             }
         });
         support_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                MyHttpClient client=new MyHttpClient(baoxiu_handler,2,"select_support_byuserID/",app_baoxiu.getUserIDtoString());
             }
         });
         return view;
     }
+    //初始化控件
     private void init_view(View view){
         add_repair=view.findViewById(R.id.add_repair);
         add_support=view.findViewById(R.id.add_support);
@@ -159,6 +146,8 @@ public class RepairFragment extends Fragment {
         lv_repair = view.findViewById(R.id.list_repair);
         lv_support = view.findViewById(R.id.list_support);
         repairTableList= new ArrayList<>();
+        supportTableList = new ArrayList<>();
+        app_baoxiu=(MyApplication) requireActivity().getApplication();
         add_repair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,6 +163,7 @@ public class RepairFragment extends Fragment {
             }
         });
     }
+    //显示维修预约的记录
     private void show_repairTableList() {
         List<ZClistviewitem> itemlist=new ArrayList<>();
         for (int i = 0; i < repairTableList.size(); i++){
@@ -185,6 +175,18 @@ public class RepairFragment extends Fragment {
         this.lv_repair.setAdapter(adapter);
         Utility.setListViewHeightBasedOnChildren(lv_repair);
     }
+    private void show_supportTableList() {
+        List<ZClistviewitem> itemlist=new ArrayList<>();
+        for (int i = 0; i < supportTableList.size(); i++){
+            SupportTable table=supportTableList.get(i);
+            ZClistviewitem item = new ZClistviewitem(table.date+"---"+table.state,table.thing,R.drawable.zcitem1);
+            itemlist.add(item);
+        }
+        ZClistViewAdapter adapter = new ZClistViewAdapter(getActivity(),itemlist);
+        this.lv_support.setAdapter(adapter);
+        Utility.setListViewHeightBasedOnChildren(lv_support);
+    }
+    //JSON数组转为维修表单集合
     private void JSONArray_to_RepairTables(JSONArray jsonArray){
         repairTableList.clear();
         try {
@@ -204,11 +206,32 @@ public class RepairFragment extends Fragment {
                 repairTable.notes=jsonArray.getJSONObject(i).getString("notes");
                 repairTable.state=jsonArray.getJSONObject(i).getString("state");
                 repairTableList.add(repairTable);
-                Log.d("repairTableList",repairTableList.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("repairTableList",repairTableList.toString());
+    }
+    private void JSONArray_to_SupportTables(JSONArray jsonArray){
+        supportTableList.clear();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                SupportTable table=new SupportTable();
+                table.table_ID=jsonArray.getJSONObject(i).getInt("id");
+                table.user_ID=jsonArray.getJSONObject(i).getInt("userID");
+                table.date=jsonArray.getJSONObject(i).getString("date");
+                table.province=jsonArray.getJSONObject(i).getString("province");
+                table.city=jsonArray.getJSONObject(i).getString("city");
+                table.address=jsonArray.getJSONObject(i).getString("address");
+                table.thing=jsonArray.getJSONObject(i).getString("thing");
+                table.contact=jsonArray.getJSONObject(i).getString("contact");
+                table.phone=jsonArray.getJSONObject(i).getString("phone");
+                table.unit=jsonArray.getJSONObject(i).getString("unit");
+                table.notes=jsonArray.getJSONObject(i).getString("notes");
+                table.state=jsonArray.getJSONObject(i).getString("state");
+                supportTableList.add(table);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
