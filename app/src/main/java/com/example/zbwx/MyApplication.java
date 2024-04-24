@@ -23,6 +23,9 @@ public class MyApplication extends Application {
     public int getUserID() {
         return user_ID;
     }
+    public String getUserIDtoString() {
+        return String.valueOf(user_ID);
+    }
     public void setUserID(int user_ID) {
         this.user_ID = user_ID;
     }
