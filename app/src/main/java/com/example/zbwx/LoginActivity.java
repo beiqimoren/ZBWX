@@ -39,10 +39,9 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG="LoginActivity";
-    private static final int REQUEST_SIGNUP=0;
+    private static final String TAG = "LoginActivity";
+    private static final int REQUEST_SIGNUP = 0;
     private SharedPreferences sp;
-
     private EditText _emailText;
     private EditText _passwordText;
     private Button _loginButton;
@@ -55,33 +54,43 @@ public class LoginActivity extends AppCompatActivity {
 
     private final OkHttpClient okHttpClient = new OkHttpClient();
 
-    private String username,password;
+    private String username, password;
     //设置handler,监听服务器返回消息，并执行操作
-    Handler login_handler = new Handler(Looper.myLooper()){
+    Handler login_handler = new Handler(Looper.myLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            try {
-                JSONObject msgobj = new JSONObject(msg.obj.toString());
-                String state = msgobj.getString("state");
-                int userID = msgobj.getInt("userID");
-                if(msg.what==1&& state.equals("成功")){
+            switch (msg.what) {
+                case 0:
+                    _loginButton.setEnabled(true);
+                    Toast.makeText(getApplication(), "连接服务器失败！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 1:
                     SharedPreferences.Editor editor = sp.edit();//记住用户名
-                    editor.putInt("USER_ID", userID);
+                    editor.putInt("USER_ID", (int) msg.obj);
                     editor.putString("USER_NAME", username);
                     editor.putString("PASSWORD", password);
                     editor.apply();
-                    MyApplication myApplication= (MyApplication) getApplication();
-                    myApplication.setUsername(sp.getString("USER_NAME",""));
-                    myApplication.setUserID(sp.getInt("USER_ID",0));
-
-                    //login_succesd();  //如果handler通知为1，则登录成功
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                    MyApplication myApplication = (MyApplication) getApplication();
+                    myApplication.setUsername(sp.getString("USER_NAME", ""));
+                    myApplication.setUserID(sp.getInt("USER_ID", 0));
+                    Toast.makeText(getApplication(), "登录成功！", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
-                }else
-                    login_failed();  //如果handler通知不为1，则登录失败
-            } catch (JSONException e) {
-                e.printStackTrace();
+                    finish();
+                    break;
+                case 2:
+                    _loginButton.setEnabled(true);
+                    _passwordText.setText("");
+                    Toast.makeText(getApplication(), "密码错误！", Toast.LENGTH_SHORT).show();
+                    break;
+                case 3:
+                    _loginButton.setEnabled(true);
+                    _passwordText.setText("");
+                    Toast.makeText(getApplication(), "用户不存在！", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -90,38 +99,25 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-         //获取控件
-        _emailText=findViewById(R.id.input_email);
-        _passwordText=findViewById(R.id.input_password);
-        _loginButton=findViewById(R.id.btn_login);
-        _signupLink=findViewById(R.id.link_sigup);
-        _rmpass=findViewById(R.id.rm_pass);
-        _aulogin=findViewById(R.id.au_login);
+        //获取控件
+        _emailText = findViewById(R.id.input_email);
+        _passwordText = findViewById(R.id.input_password);
+        _loginButton = findViewById(R.id.btn_login);
+        _signupLink = findViewById(R.id.link_sigup);
+        _rmpass = findViewById(R.id.rm_pass);
+        _aulogin = findViewById(R.id.au_login);
         //获取SharedPreferences实例
-        sp=this.getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
-//        if(sp.getBoolean("ISCHECK", false)) {
-//            _rmpass.setChecked(true);
-//            _emailText.setText(sp.getString("USER_NAME", ""));
-//            _passwordText.setText(sp.getString("PASSWORD", ""));
-//            if(sp.getBoolean("AUTO_ISCHECK", false)) {
-//                //设置默认是自动登录状态
-//                _aulogin.setChecked(true);
-//                send_login_requst();     //发送登录请求
-//                //Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-//                //startActivity(intent);
-//                //this.finish();
-//            }
-//        }
+        sp = this.getSharedPreferences("userInfo", Activity.MODE_PRIVATE);
         //注册动作
         _signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getApplicationContext(),SignupActivity.class);
-                //startActivityForResult(intent,REQUEST_SIGNUP);
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
             }
         });
         //点击登录       发送登录验证请求
-        _loginButton.setOnClickListener(new View.OnClickListener(){
+        _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send_login_requst();
@@ -131,8 +127,8 @@ public class LoginActivity extends AppCompatActivity {
         _emailText.setText(sp.getString("USER_NAME", ""));
         _passwordText.setText(sp.getString("PASSWORD", ""));
         send_login_requst();     //发送登录请求
-
     }
+
     //发送验证请求
     public void send_login_requst() {
         if (!validate()) {  //检查数据合法性
@@ -140,9 +136,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         _loginButton.setEnabled(false);  //登录按钮变灰色
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Authenticating...");
-//        progressDialog.show();    //模拟登录转圈
         username = _emailText.getText().toString();  //获取用户名
         password = _passwordText.getText().toString();  //获取密码
         //发送网络请求   构建查询参数
@@ -157,52 +150,36 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("---body", "onResponse");
                 login_handler.sendEmptyMessage(0);
             }
+
             @Override     //响应成功进这里
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    Message msg =new Message();
-                    msg.what=1;
-                    msg.obj=response.body().string();
-                    login_handler.sendMessage(msg);//Handler 发送消息，通知主进程响应成功
+                String response_string = response.body().string();
+                Message msg = new Message();
+                try {
+                    JSONObject jsonObject=new JSONObject(response_string);
+                    int userID = jsonObject.getInt("userID");
+                    String state = jsonObject.getString("state");
+                    switch (state) {
+                        case "成功":
+                            msg.what=1;
+                            msg.obj=userID;
+                            login_handler.sendMessage(msg);
+                            break;
+                        case "密码错误":
+                            login_handler.sendEmptyMessage(2);
+                            break;
+                        case "用户不存在":
+                            login_handler.sendEmptyMessage(3);
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
-    //验证失败后执行下列操作
-    public void login_failed(){
-//        progressDialog.dismiss();
-        _loginButton.setEnabled(true);
-        _emailText.setText("");
-        _passwordText.setText("");
-        Toast.makeText(getApplication(), "用户名或密码错误", Toast.LENGTH_SHORT).show();
-
-    }
-    //验证成功后执行下列操作
-    public void login_succesd(){
-        if(_rmpass.isChecked()) {
-            SharedPreferences.Editor editor = sp.edit();//记住用户名
-            editor.putString("USER_NAME", username);
-            editor.putString("PASSWORD", password);
-            editor.apply();
-            sp.edit().putBoolean("ISCHECK", true).apply();
-        }else sp.edit().putBoolean("ISCHECK", false).apply();
-        if (this._aulogin.isChecked())
-            sp.edit().putBoolean("AUTO_ISCHECK", true).apply();
-        else sp.edit().putBoolean("AUTO_ISCHECK", false).apply();
-//        progressDialog.dismiss();
-          this._loginButton.setEnabled(true);
-          //finish();
-        //延迟2秒后finish当前activity
-//        new android.os.Handler().postDelayed(
-//                new Runnable() {
-//                    public void run() {
-//                        // On complete call either onLoginSuccess or onLoginFailed
-//                        progressDialog.dismiss();
-//                        onLoginSuccess();
-//                        // onLoginFailed();
-//
-//                    }
-//                }, 2000);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -217,10 +194,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onBackPressed();
         moveTaskToBack(true);
     }
+
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         finish();
     }
+
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "用户名或密码错误！", Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
