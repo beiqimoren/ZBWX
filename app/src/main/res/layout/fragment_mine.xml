@@ -5,11 +5,103 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MineFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="我的"
-        android:textSize="140dp" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:orientation="vertical"
+            android:background="@drawable/minebg">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:src="@drawable/minetouxiang"/>
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:text="13308394887"
+                android:textColor="@color/white"
+                android:gravity="center"/>
+        </LinearLayout>
+<!--        菜单按钮-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/huise_200"
+            android:layout_marginHorizontal="20dp">
+
+            <android.widget.Button
+                android:id="@+id/my_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background"
+                android:drawableLeft="@drawable/iconpark_message_unread_1"
+                android:drawableRight="@drawable/mine_more"
+                android:paddingHorizontal="20dp"
+                android:text="我的消息" />
+
+            <android.widget.Button
+                android:id="@+id/myask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我的咨询"
+                android:drawableLeft="@drawable/iconpark_message_unread_1"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="3dp"
+                android:drawableRight="@drawable/mine_more"
+                android:background="@drawable/button_background"
+                />
+            <android.widget.Button
+                android:id="@+id/contactus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="联系我们"
+                android:drawableLeft="@drawable/iconpark_message_unread_1"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="3dp"
+                android:drawableRight="@drawable/mine_more"
+                android:background="@drawable/button_background"
+                />
+            <android.widget.Button
+                android:id="@+id/suggest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="反馈建议"
+                android:drawableLeft="@drawable/iconpark_message_unread_1"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="3dp"
+                android:drawableRight="@drawable/mine_more"
+                android:background="@drawable/button_background"
+                />
+            <android.widget.Button
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="退出登录"
+                android:drawableLeft="@drawable/iconpark_message_unread_1"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="3dp"
+                android:drawableRight="@drawable/mine_more"
+                android:background="@drawable/button_background"
+                />
+
+
+        </LinearLayout>
+
+
+"
+    </LinearLayout>
+
 
 </FrameLayout>

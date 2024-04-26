@@ -1,0 +1,23 @@
+<!-- res/drawable/button_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#D4F0F3"/> <!-- 按下时的背景颜色 -->
+            <stroke
+                android:width="1dp"
+                android:color="#2AA4FF"/> <!-- 边框颜色 -->
+<!--            <corners android:radius="15dp" />  &lt;!&ndash; 边框圆角 &ndash;&gt;-->
+            <!-- 其他属性如radius等 -->
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="#ffffff"/> <!-- 默认状态下的背景颜色 -->
+            <stroke
+                android:width="1dp"
+                android:color="#2AA4FF"/> <!-- 默认状态下的边框颜色 -->
+<!--            <corners android:radius="15dp" />  &lt;!&ndash; 边框圆角 &ndash;&gt;-->
+            <!-- 其他属性如radius等 -->
+        </shape>
+    </item>
+</selector>
