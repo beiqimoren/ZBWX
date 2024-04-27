@@ -1,5 +1,6 @@
 package com.example.zbwx.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,8 +8,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.example.zbwx.LoginActivity;
+import com.example.zbwx.MyApplication;
 import com.example.zbwx.R;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,28 +24,20 @@ import com.example.zbwx.R;
  */
 public class MineFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
+
+    TextView username;
+    private Button btn_msg,btn_ask,btn_contactus,btn_suggest,btn_lonout;
+    MyApplication myApplication;
 
     public MineFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MineFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MineFragment newInstance(String param1, String param2) {
         MineFragment fragment = new MineFragment();
         Bundle args = new Bundle();
@@ -47,7 +46,6 @@ public class MineFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +54,61 @@ public class MineFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mine, container, false);
+        View view=inflater.inflate(R.layout.fragment_mine, container, false);
+        init(view);//初始化控件
+        //我的消息
+        btn_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //我的咨询
+        btn_ask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //联系我们
+        btn_contactus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //反馈建议
+        btn_suggest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        //退出登录
+        btn_lonout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                myApplication.setUserID(0);
+//                myApplication.setUsername("");
+                Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                intent.putExtra("is_autolonin", false);
+                startActivity(intent);
+            }
+        });
+        return view;
+    }
+    //初始控件
+    private void init(View view){
+        username =view.findViewById(R.id.user_name);
+        btn_msg = view.findViewById(R.id.my_msg);
+        btn_ask = view.findViewById(R.id.myask);
+        btn_contactus = view.findViewById(R.id.contactus);
+        btn_suggest = view.findViewById(R.id.suggest);
+        btn_lonout = view.findViewById(R.id.logout);
+        myApplication=(MyApplication) requireActivity().getApplication();
+        username.setText(myApplication.getUsername());
     }
 }

@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zbwx.LoginActivity;
@@ -32,6 +34,7 @@ import com.example.zbwx.model.SupportTable;
 import com.example.zbwx.model.Utility;
 import com.example.zbwx.model.ZClistViewAdapter;
 import com.example.zbwx.model.ZClistviewitem;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +59,7 @@ public class RepairFragment extends Fragment {
     ImageView add_repair,add_support,repair_more,support_more;
     ListView lv_repair,lv_support;
     MyApplication app_baoxiu;
+    MyHttpClient myHttpClient;
     List<RepairTable> repairTableList;
     List<SupportTable> supportTableList;
     //设置handler,监听服务器返回消息，并执行操作
@@ -126,13 +130,42 @@ public class RepairFragment extends Fragment {
         repair_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyHttpClient client=new MyHttpClient(baoxiu_handler,"select_repair_byuserID/",app_baoxiu.getUserIDtoString());
+                if (repairTableList.size()==0){
+                    myHttpClient.SendToServer(baoxiu_handler,"select_repair_byuserID/",app_baoxiu.getUserIDtoString());
+                }else {
+                    repairTableList.clear();
+                    show_repairTableList();
+                }
             }
         });
         support_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyHttpClient client=new MyHttpClient(baoxiu_handler,2,"select_support_byuserID/",app_baoxiu.getUserIDtoString());
+                if (supportTableList.size()==0){
+                    myHttpClient.SendToServer(baoxiu_handler,2,"select_support_byuserID/",app_baoxiu.getUserIDtoString());
+                }else {
+                    supportTableList.clear();
+                    show_supportTableList();
+                }
+
+            }
+        });
+        //维修单列表点击事件
+        lv_repair.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent(requireActivity(),RepairActivity.class);
+                intent.putExtra("selcted_repairitem",new Gson().toJson(repairTableList.get(i)));
+                startActivity(intent);
+            }
+        });
+        //技术支援单列表点击事件
+        lv_support.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent=new Intent(requireActivity(),SupportActivity.class);
+                intent.putExtra("selcted_supportitem",new Gson().toJson(supportTableList.get(i)));
+                startActivity(intent);
             }
         });
         return view;
@@ -147,6 +180,7 @@ public class RepairFragment extends Fragment {
         lv_support = view.findViewById(R.id.list_support);
         repairTableList= new ArrayList<>();
         supportTableList = new ArrayList<>();
+        myHttpClient=new MyHttpClient();
         app_baoxiu=(MyApplication) requireActivity().getApplication();
         add_repair.setOnClickListener(new View.OnClickListener() {
             @Override

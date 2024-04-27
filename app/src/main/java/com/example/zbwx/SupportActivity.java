@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.icu.util.ChineseCalendar;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +24,9 @@ import android.widget.Toast;
 
 import com.example.zbwx.model.Citys;
 import com.example.zbwx.model.MyHttpClient;
+import com.example.zbwx.model.RepairTable;
+import com.example.zbwx.model.SupportTable;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +39,7 @@ public class SupportActivity extends AppCompatActivity {
     ImageView imageView;
     EditText date, address, thing, contact, phone, unit, notes;
     Spinner sp_province, sp_city;
-    Button submint;
+    Button submit;
     MyApplication myApplication;
     private String province, city;
     int position1 = 0;
@@ -65,7 +70,7 @@ public class SupportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_support);
         init();//初始化控件
         //点击提交数据
-        submint.setOnClickListener(new View.OnClickListener() {
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JSONObject json = new JSONObject();
@@ -87,6 +92,13 @@ public class SupportActivity extends AppCompatActivity {
                 MyHttpClient client = new MyHttpClient(support_handler, "addsupporttable/", json);
             }
         });
+        //判断是用于显示，还是编辑提交
+        Intent intent =getIntent();
+        String JsonData=intent.getStringExtra("selcted_supportitem");
+        if(JsonData!=null){
+            SupportTable supportTable=new Gson().fromJson(JsonData,SupportTable.class);
+            ShowSupportTable(supportTable);
+        }
     }
 
     //初始化控件
@@ -101,7 +113,7 @@ public class SupportActivity extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         unit = findViewById(R.id.unit);
         notes = findViewById(R.id.notes);
-        submint = findViewById(R.id.submit);
+        submit = findViewById(R.id.submit);
         myApplication = (MyApplication) getApplication();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,12 +165,40 @@ public class SupportActivity extends AppCompatActivity {
 
             }
         });
-    }
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        // 获取日期对话框设定的年月份
-        String desc = String.format("您选择的日期是%d年%d月%d日",
-                year, monthOfYear + 1, dayOfMonth);
-        //tv_date.setText(desc);
-    }
 
+    }
+    private void ShowSupportTable(SupportTable supportTable){
+        date.setText(supportTable.date);
+        date.setTextColor(Color.BLACK);
+        date.setEnabled(false);
+
+        sp_province.setEnabled(false);
+        sp_city.setEnabled(false);
+
+        address.setText(supportTable.address);
+        address.setTextColor(Color.BLACK);
+        address.setEnabled(false);
+
+        thing.setText(supportTable.thing);
+        thing.setTextColor(Color.BLACK);
+        thing.setEnabled(false);
+
+        contact.setText(supportTable.contact);
+        contact.setTextColor(Color.BLACK);
+        contact.setEnabled(false);
+
+        phone.setText(supportTable.phone);
+        phone.setTextColor(Color.BLACK);
+        phone.setEnabled(false);
+
+        unit.setText(supportTable.unit);
+        unit.setTextColor(Color.BLACK);
+        unit.setEnabled(false);
+
+        notes.setText(supportTable.notes);
+        notes.setTextColor(Color.BLACK);
+        notes.setEnabled(false);
+
+        submit.setEnabled(false);
+    }
 }

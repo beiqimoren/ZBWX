@@ -93,8 +93,10 @@ public class LoginActivity extends AppCompatActivity {
                 send_login_requst(); //发送验证请求
             }
         });
-        //默认自动登录
-        send_login_requst();
+        //判断要不要自动登录
+        Intent intent=getIntent();
+        if(intent.getBooleanExtra("is_autolonin", true))
+            send_login_requst();
     }
     //初始化控件
     private void init_view(){

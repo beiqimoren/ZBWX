@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +24,9 @@ import android.widget.Toast;
 
 import com.example.zbwx.fragments.RepairFragment;
 import com.example.zbwx.model.Citys;
+import com.example.zbwx.model.MyHttpClient;
 import com.example.zbwx.model.RepairTable;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +78,43 @@ public class RepairActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repair);
-        //初始化控件
+        init();//初始化控件
+        //提交数据
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //收集数据打包成JSON
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("userID", myApplication.getUserID());
+                    json.put("equipment", equipment.getText().toString());
+                    json.put("type", type.getText().toString());
+                    json.put("province", province);
+                    json.put("city", city);
+                    json.put("address", address.getText().toString());
+                    json.put("fault", fault.getText().toString());
+                    json.put("contact", contact.getText().toString());
+                    json.put("phone", phone.getText().toString());
+                    json.put("unit", unit.getText().toString());
+                    json.put("notes", notes.getText().toString());
+                    json.put("state", "待审核");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                MyHttpClient client = new MyHttpClient(repair_handler, "addrepairtable/", json);
+            }
+        });
+        //判断是用于显示，还是编辑提交
+        Intent intent =getIntent();
+        String JsonData=intent.getStringExtra("selcted_repairitem");
+        if(JsonData!=null){
+            RepairTable repairTable=new Gson().fromJson(JsonData,RepairTable.class);
+            ShowRepairTable(repairTable);
+        }
+
+    }
+    //初始化控件
+    private void init(){
         imageView = findViewById(R.id.back_image);
         submit = findViewById(R.id.submit);
         equipment = findViewById(R.id.equipment);
@@ -124,61 +163,44 @@ public class RepairActivity extends AppCompatActivity {
 
             }
         });
-        //提交数据
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //收集数据打包成JSON
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("userID", myApplication.getUserID());
-                    json.put("equipment", equipment.getText().toString());
-                    json.put("type", type.getText().toString());
-                    json.put("province", province);
-                    json.put("city", city);
-                    json.put("address", address.getText().toString());
-                    json.put("fault", fault.getText().toString());
-                    json.put("contact", contact.getText().toString());
-                    json.put("phone", phone.getText().toString());
-                    json.put("unit", unit.getText().toString());
-                    json.put("notes", notes.getText().toString());
-                    json.put("state", "待审核");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                OkHttpClient okHttpClient = new OkHttpClient();
-                RequestBody requestBody = RequestBody.create(String.valueOf(json),MediaType.parse("application/json; charset=utf-8"));
-                Request request=new Request.Builder()
-                        .url(Objects.requireNonNull(HttpUrl.parse(my_url + "addrepairtable/")))
-                        .addHeader("key","value")
-                        .post(requestBody)
-                        .build();
-                okHttpClient.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        Log.d("Repairsend", "维修表发送失败");
-                    }
+    }
+    //显示表内信息
+    private void ShowRepairTable(RepairTable repairTable){
+        equipment.setText(repairTable.equipment);
+        equipment.setTextColor(Color.BLACK);
+        equipment.setEnabled(false);
 
-                    @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        Log.d("Repairsend", Objects.requireNonNull(response.body()).string());
-                        String body = Objects.requireNonNull(response.body()).string();
-                        Message msg =new Message();
-                        msg.what=1;
-                        msg.obj=body;
-                        repair_handler.sendMessage(msg);
-                    }
-                });
+        type.setText(repairTable.type);
+        type.setTextColor(Color.BLACK);
+        type.setEnabled(false);
 
+        spinner1.setEnabled(false);
+        spinner2.setEnabled(false);
+        address.setText(repairTable.province+repairTable.city+repairTable.address);
+        address.setTextColor(Color.BLACK);
+        address.setEnabled(false);
 
-            }
-        });
+        fault.setText(repairTable.fault);
+        fault.setTextColor(Color.BLACK);
+        fault.setEnabled(false);
 
+        contact.setText(repairTable.contacts);
+        contact.setTextColor(Color.BLACK);
+        contact.setEnabled(false);
 
+        phone.setText(repairTable.phone);
+        phone.setTextColor(Color.BLACK);
+        phone.setEnabled(false);
 
+        unit.setText(repairTable.unit);
+        unit.setTextColor(Color.BLACK);
+        unit.setEnabled(false);
 
+        notes.setText(repairTable.notes);
+        notes.setTextColor(Color.BLACK);
+        notes.setEnabled(false);
 
-
+        submit.setEnabled(false);
     }
 
 
