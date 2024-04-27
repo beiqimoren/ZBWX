@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.zbwx.IntroduceActivity;
 import com.example.zbwx.LoginActivity;
 import com.example.zbwx.MainActivity;
+import com.example.zbwx.MessageActivity;
 import com.example.zbwx.R;
 import com.example.zbwx.RepairActivity;
 import com.example.zbwx.SupportActivity;
@@ -66,6 +67,13 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_home, container, false);
         init(view);//初始化控件
+        msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), MessageActivity.class);
+                startActivity(intent);
+            }
+        });
         //第1个圆形按钮的监听事件
         yuan1.setOnClickListener(new View.OnClickListener() {
             @Override
