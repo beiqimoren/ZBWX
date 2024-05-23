@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.zbwx.ConsultActivity;
 import com.example.zbwx.LoginActivity;
 import com.example.zbwx.MessageActivity;
 import com.example.zbwx.MyApplication;
@@ -72,7 +73,8 @@ public class MineFragment extends Fragment {
         btn_ask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(requireActivity(), ConsultActivity.class);
+                startActivity(intent);
             }
         });
         //联系我们

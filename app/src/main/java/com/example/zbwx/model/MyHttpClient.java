@@ -23,7 +23,7 @@ import okhttp3.Response;
 
 public class MyHttpClient {
 
-    private static final String my_url="http://192.168.1.4:8000/";
+    private static final String my_url="http://192.168.216.215:8000/";
     OkHttpClient okHttpClient;
     public MyHttpClient(){}
     ////get方式发送请求，不带参数的情况

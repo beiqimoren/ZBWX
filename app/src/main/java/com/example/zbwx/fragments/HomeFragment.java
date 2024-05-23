@@ -1,6 +1,5 @@
 package com.example.zbwx.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,9 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zbwx.IntroduceActivity;
-import com.example.zbwx.LoginActivity;
-import com.example.zbwx.MainActivity;
 import com.example.zbwx.MessageActivity;
+import com.example.zbwx.NewConsultActivity;
 import com.example.zbwx.R;
 import com.example.zbwx.RepairActivity;
 import com.example.zbwx.SupportActivity;
@@ -74,7 +71,7 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        //第1个圆形按钮的监听事件
+        //机构介绍的监听事件
         yuan1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,22 +79,22 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        //第2个圆形按钮的监听事件
+        //机构注册的监听事件
         yuan2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "机构注册",Toast.LENGTH_SHORT).show();
             }
         });
-        //第3个圆形按钮的监听事件
+        //业务咨询的监听事件
         yuan3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "业务咨询",Toast.LENGTH_SHORT).show();
-
+                Intent intent = new Intent(getActivity(), NewConsultActivity.class);
+                startActivity(intent);
             }
         });
-        //第4个圆形按钮的监听事件
+        //能力培训的监听事件
         yuan4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
