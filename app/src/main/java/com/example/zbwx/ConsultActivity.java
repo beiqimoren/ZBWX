@@ -74,7 +74,8 @@ public class ConsultActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent=new Intent(ConsultActivity.this,ConsultMsgActivity.class);
-                intent.putExtra("selcted_consultitem",new Gson().toJson(consultlist.get(i)));
+                //intent.putExtra("selcted_consultitem",new Gson().toJson(consultlist.get(i)));
+                intent.putExtra("selcted_consultitem",consultlist.get(i).consultID);
                 startActivity(intent);
             }
         });
@@ -111,12 +112,10 @@ public class ConsultActivity extends AppCompatActivity {
                 consult_temp.userID=jsonArray.getJSONObject(i).getInt("userID");
                 consult_temp.consultID=jsonArray.getJSONObject(i).getInt("id");
                 consult_temp.title=jsonArray.getJSONObject(i).getString("title");
-                //JSONObject object=new JSONObject();
-                //object.put("body",);
                 JSONArray content_temp=new JSONArray(jsonArray.getJSONObject(i).getString("contentlist"));
                 for(int j = 0; j < content_temp.length(); j++){
                     ConsultMsg conmsg = new ConsultMsg();
-                    //conmsg.time_stamp=content_temp.getJSONObject(j).getInt("time_stamp");
+                    conmsg.time_stamp=content_temp.getJSONObject(j).getLong("time_stamp");
                     conmsg.type=content_temp.getJSONObject(j).getInt("type");
                     conmsg.content=content_temp.getJSONObject(j).getString("content");
                     consult_temp.contentlist.add(conmsg);

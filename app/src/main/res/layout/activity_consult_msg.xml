@@ -31,19 +31,45 @@
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="20dp"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="20dp"
+            android:paddingTop="20dp">
+
             <ListView
                 android:id="@+id/consulmsgtlist"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </ListView>
+                android:layout_height="match_parent"></ListView>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/edittext_father_style"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/consultmsg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittext_style"
+            android:gravity="center"
+            android:minLines="5" />
+
+        <Button
+            android:id="@+id/send_consultmsg"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="提交"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 </LinearLayout>
