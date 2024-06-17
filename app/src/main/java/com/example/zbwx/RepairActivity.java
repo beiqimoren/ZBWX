@@ -49,9 +49,9 @@ import okhttp3.Response;
 public class RepairActivity extends AppCompatActivity {
 
     ImageView imageView;
-    Spinner spinner1, spinner2;
     MyApplication myApplication;
 
+    Spinner spinner1, spinner2;
     private String province, city;
     int position1 = 0;
 
@@ -131,9 +131,10 @@ public class RepairActivity extends AppCompatActivity {
                 finish();
             }
         });
+        myApplication = (MyApplication)getApplication();
+
         spinner1 = findViewById(R.id.sp1);
         spinner2 = findViewById(R.id.sp2);
-        myApplication = (MyApplication)getApplication();
         // 省份Spinner适配器
         ArrayAdapter<String> provinceAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new Citys().getProvince());
         spinner1.setAdapter(provinceAdapter);

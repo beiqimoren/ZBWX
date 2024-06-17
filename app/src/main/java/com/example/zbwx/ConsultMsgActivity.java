@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.zbwx.model.Cmsg;
 import com.example.zbwx.model.Consult;
 import com.example.zbwx.model.ConsultMsg;
 import com.example.zbwx.model.MyHttpClient;
@@ -30,12 +31,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultMsgActivity extends AppCompatActivity {
 
     MyApplication myapp;
-    private Consult myconsult;
+    private int consultID = 0;
     private ListView lsv_consultmsg;
     private EditText consultmsg;
     private Button send_consultmsg;
@@ -45,6 +47,7 @@ public class ConsultMsgActivity extends AppCompatActivity {
     private int LEFT = 0;
     private int RIGHT = 1;
     private LayoutInflater inflater;
+    private ArrayList<Cmsg> Cmsglist;
     private MyAdapter adapter;
     MyHttpClient myHttpClient;
     //设置handler,监听服务器返回消息，并执行操作
@@ -72,7 +75,7 @@ public class ConsultMsgActivity extends AppCompatActivity {
                     break;
                 case 7:
                     if (msg.obj.equals("成功")) {
-                        myHttpClient.SendToServer(consultmsg_handler, "getconsultbyID/", String.valueOf(myconsult.consultID));
+                        myHttpClient.SendToServer(consultmsg_handler, "getconsultbyID/", String.valueOf(consultID));
                     }
                     break;
                 default:
@@ -87,34 +90,19 @@ public class ConsultMsgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_consult_msg);
         init();//初始化
         //加载数据
-        myHttpClient.SendToServer(consultmsg_handler, "getconsultbyID/", String.valueOf(myconsult.consultID));
-        //发送按钮监听
+        myHttpClient.SendToServer(consultmsg_handler, "getconsultbyID/", String.valueOf(consultID));
+        //发送按钮
         send_consultmsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!(TextUtils.isEmpty(consultmsg.getText().toString()))){
-                    ConsultMsg msg = new ConsultMsg();
-                    msg.type = 0;
-                    msg.content = consultmsg.getText().toString();
-                    msg.time_stamp = System.currentTimeMillis();
-                    myconsult.contentlist.add(msg);
                     myHttpClient = new MyHttpClient();
                     //收集数据打包成JSON
                     try {
                         JSONObject json = new JSONObject();
-                        JSONArray contentlistjson = new JSONArray();
-                        for (int i = 0; i < myconsult.contentlist.size(); i++) {
-                            JSONObject content_json = new JSONObject();
-                            content_json.put("time_stamp", myconsult.contentlist.get(i).time_stamp);
-                            content_json.put("type", myconsult.contentlist.get(i).type);
-                            content_json.put("content", myconsult.contentlist.get(i).content);
-                            contentlistjson.put(content_json);
-                        }
-                        json.put("userID", myconsult.userID);
-                        json.put("adminID", myconsult.adminID);
-                        json.put("consultID", myconsult.consultID);
-                        json.put("title", myconsult.title);
-                        json.put("contentlist", contentlistjson);
+                        json.put("consultID", consultID);
+                        json.put("type", 0);
+                        json.put("content", consultmsg.getText().toString());
                         //发送信息
                         myHttpClient.SendToServer(consultmsg_handler, 7, "updateconsult/", json);
                         consultmsg.setText("");
@@ -131,18 +119,19 @@ public class ConsultMsgActivity extends AppCompatActivity {
 
     //初始化
     private void init() {
-        myconsult=new Consult();
         //获取传进来的信息
         Intent intent = getIntent();
         if (intent != null) {
-            myconsult.consultID=intent.getIntExtra("selcted_consultitem",0);
+            this.consultID=intent.getIntExtra("selcted_consultitem",0);
         }
+
         back_image=findViewById(R.id.back_image);
         lsv_consultmsg = findViewById(R.id.consulmsgtlist);
         consultmsg = findViewById(R.id.consultmsg);
         myHttpClient = new MyHttpClient();
         send_consultmsg = findViewById(R.id.send_consultmsg);
         inflater = LayoutInflater.from(this);
+        Cmsglist= new ArrayList<>();
         back_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,32 +140,27 @@ public class ConsultMsgActivity extends AppCompatActivity {
         });
         adapter = new MyAdapter();
 
-
-
     }
 
     //更新显示
     private void show_consultmsg() {
         adapter.notifyDataSetChanged();
         lsv_consultmsg.setAdapter(adapter);
+        lsv_consultmsg.setSelection(adapter.getCount() - 1);
         Utility.setListViewHeightBasedOnChildren(lsv_consultmsg);
     }
 
     //json解析
     private void JSONArray_to_myconsult(JSONArray jsonArray) {
-        myconsult.contentlist.clear();
+        Cmsglist.clear();
         try {
-            myconsult.adminID = jsonArray.getJSONObject(0).getInt("adminID");
-            myconsult.userID = jsonArray.getJSONObject(0).getInt("userID");
-            myconsult.consultID = jsonArray.getJSONObject(0).getInt("id");
-            myconsult.title = jsonArray.getJSONObject(0).getString("title");
-            JSONArray content_temp = new JSONArray(jsonArray.getJSONObject(0).getString("contentlist"));
-            for (int j = 0; j < content_temp.length(); j++) {
-                ConsultMsg conmsg = new ConsultMsg();
-                conmsg.time_stamp = content_temp.getJSONObject(j).getLong("time_stamp");
-                conmsg.type = content_temp.getJSONObject(j).getInt("type");
-                conmsg.content = content_temp.getJSONObject(j).getString("content");
-                myconsult.contentlist.add(conmsg);
+            //JSONArray content_temp = new JSONArray(jsonArray.getJSONObject(0).getString("myconsultbyID"));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                Cmsg conmsg = new Cmsg();
+                conmsg.consultID = jsonArray.getJSONObject(i).getInt("consultID");
+                conmsg.type = jsonArray.getJSONObject(i).getInt("type");
+                conmsg.content = jsonArray.getJSONObject(i).getString("content");
+                Cmsglist.add(conmsg);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -187,12 +171,12 @@ public class ConsultMsgActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return myconsult.contentlist.size();
+            return Cmsglist.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return myconsult.contentlist.get(position);
+            return Cmsglist.get(position);
         }
 
         @Override
@@ -202,7 +186,7 @@ public class ConsultMsgActivity extends AppCompatActivity {
 
         @Override
         public int getItemViewType(int position) {
-            if (myconsult.contentlist.get(position).type == LEFT) {
+            if (Cmsglist.get(position).type == LEFT) {
                 return LEFT;
             }
             return RIGHT;
@@ -216,7 +200,7 @@ public class ConsultMsgActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            ConsultMsg p = myconsult.contentlist.get(position);
+            Cmsg p = Cmsglist.get(position);
             if (getItemViewType(position) == LEFT) {
                 if (convertView == null) {
                     holder = new ViewHolder();

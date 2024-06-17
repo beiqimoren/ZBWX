@@ -95,7 +95,7 @@ public class ConsultActivity extends AppCompatActivity {
         List<ZClistviewitem> itemlist=new ArrayList<>();
         for (int i = 0; i < consultlist.size(); i++){
             Consult table=consultlist.get(i);
-            ZClistviewitem item = new ZClistviewitem(table.title,table.contentlist.get(0).content,R.drawable.zcitem1);
+            ZClistviewitem item = new ZClistviewitem(table.title,table.firstcontent,R.drawable.zcitem1);
             itemlist.add(item);
         }
         MsglistViewAdapter adapter = new MsglistViewAdapter(this,itemlist);
@@ -112,14 +112,7 @@ public class ConsultActivity extends AppCompatActivity {
                 consult_temp.userID=jsonArray.getJSONObject(i).getInt("userID");
                 consult_temp.consultID=jsonArray.getJSONObject(i).getInt("id");
                 consult_temp.title=jsonArray.getJSONObject(i).getString("title");
-                JSONArray content_temp=new JSONArray(jsonArray.getJSONObject(i).getString("contentlist"));
-                for(int j = 0; j < content_temp.length(); j++){
-                    ConsultMsg conmsg = new ConsultMsg();
-                    conmsg.time_stamp=content_temp.getJSONObject(j).getLong("time_stamp");
-                    conmsg.type=content_temp.getJSONObject(j).getInt("type");
-                    conmsg.content=content_temp.getJSONObject(j).getString("content");
-                    consult_temp.contentlist.add(conmsg);
-                }
+                consult_temp.firstcontent=jsonArray.getJSONObject(i).getString("contentlist");
                 consultlist.add(consult_temp);
             }
         } catch (JSONException e) {

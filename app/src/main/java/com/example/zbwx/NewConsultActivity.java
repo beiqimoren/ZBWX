@@ -68,12 +68,13 @@ public class NewConsultActivity extends AppCompatActivity {
                     content_json.put("time_stamp", System.currentTimeMillis());
                     content_json.put("type", 0);
                     content_json.put("content",content.getText());
-                    JSONArray content=new JSONArray();
-                    content.put(content_json);
+                    //JSONArray content=new JSONArray();
+                    //content.put(content_json);
                     json.put("userID", myapp.getUserID());
                     json.put("adminID", 0);
                     json.put("title", title.getText());
-                    json.put("contentlist",content.toString());
+                    //json.put("contentlist",content.toString());
+                    json.put("content",content.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
